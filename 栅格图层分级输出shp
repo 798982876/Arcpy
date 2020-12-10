@@ -1,0 +1,47 @@
+#栅格分级导出矢量
+# import system modules
+import os
+import arcpy
+from arcpy.sa import *
+
+from arcpy import env
+
+# Set environment settings
+env.overwriteOutput = True
+env.workspace = "E:/wantshp/1/"
+gdb = "E:/wantshp/1/1.gdb/"
+# Check out any necessary licenses
+arcpy.CheckOutExtension("Spatial")
+name_list = ["one","two","three","four","five","six","seven","eight","nine","ten","eleven","twelve","thirteen","fourteen","fifteen"]
+i = 0
+
+# Loop through the workspace, find all the mxds and create a tile package using the same name as the mxd
+for tif in arcpy.ListFiles("*.tif"):
+    print "tif " + tif
+    #express = '("'+tif+'"> 0.4) * 1 + ("'+tif+'" >= 0.3)*("'+tif+'"< 0.4) * 2+("'+tif+'" >= 0.15) * ("'+tif+'"<0.3) * 3+("'+tif+'"<0.15)*4'
+    #地图代数
+    outRaster = (Raster(tif)>0.4)*1 + (Raster(tif)>=0.3)*(Raster(tif)<0.4)*2 + (Raster(tif)>=0.15)*(Raster(tif)<0.3)*3 + (Raster(tif)<0.15)*4
+ 
+    #print name_list[i]
+    #arcpy.gp.RasterCalculator_sa(express, name_list[i])
+    #outRaster.save(name_list[i])
+    #i=i+1
+    #栅格转矢量
+    arcpy.RasterToPolygon_conversion(outRaster,name_list[i]+'.shp','SIMPLIFY','VALUE')
+
+    #融合
+    print gdb+name_list[i]
+    arcpy.Dissolve_management(name_list[i]+'.shp',gdb+name_list[i],['gridcode'])
+    
+    #新建文件夹作为存储分shp
+    path = env.workspace+'/'+name_list[i]+'/'
+    print path
+    isExists = os.path.exists(path)
+    if not isExists:
+        os.makedirs(path)
+    
+    arcpy.SplitByAttributes_analysis(gdb+name_list[i],path,['gridcode'])
+    i = i+1
+    
+    
+    print "yes"
