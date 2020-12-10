@@ -9,13 +9,13 @@ from arcpy import env
 # Set environment settings
 env.overwriteOutput = True
 env.workspace = "E:/wantshp/1/"
-gdb = "E:/wantshp/1/1.gdb/"
+gdb = "E:/wantshp/1/1.gdb/"#文件database
 # Check out any necessary licenses
 arcpy.CheckOutExtension("Spatial")
 name_list = ["one","two","three","four","five","six","seven","eight","nine","ten","eleven","twelve","thirteen","fourteen","fifteen"]
 i = 0
 
-# Loop through the workspace, find all the mxds and create a tile package using the same name as the mxd
+# Loop through the workspace, find all the all the files
 for tif in arcpy.ListFiles("*.tif"):
     print "tif " + tif
     #express = '("'+tif+'"> 0.4) * 1 + ("'+tif+'" >= 0.3)*("'+tif+'"< 0.4) * 2+("'+tif+'" >= 0.15) * ("'+tif+'"<0.3) * 3+("'+tif+'"<0.15)*4'
