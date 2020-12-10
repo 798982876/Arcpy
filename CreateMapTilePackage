@@ -1,0 +1,18 @@
+# Name: CreateMapTilePackage.py
+# Description:  Find all the map documents that reside in a specified folder and create tile packages for each map document.
+
+# import system modules
+import os
+import arcpy
+
+from arcpy import env
+
+# Set environment settings
+env.overwriteOutput = True
+env.workspace = "E:/package/1/" 
+
+# Loop through the workspace, find all the mxds and create a tile package using the same name as the mxd
+for mxd in arcpy.ListFiles("*.mxd"):
+    print "Packaging " + mxd
+    arcpy.CreateMapTilePackage_management(mxd,"EXISTING", os.path.splitext(mxd)[0] + '.tpk', "PNG", "18", "Geodetic_ArcGIS_10.1.xml")
+    print "yes"
